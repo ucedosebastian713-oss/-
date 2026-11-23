@@ -1,0 +1,2584 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0d12">
+<title>🐢</title>
+
+<style>
+:root{
+ --bg:#080a0f;
+ --panel:#11151d;
+ --panel2:#171c26;
+ --text:#f4f7fb;
+ --muted:#9ca7b8;
+ --accent:#7c9cff;
+ --accent2:#9c7cff;
+ --border:#252d3a;
+ --good:#31c48d;
+ --warn:#f2c94c;
+ --bad:#ef6262;
+ --shadow:0 12px 35px rgba(0,0,0,.28);
+ --r:22px;
+}
+
+*{box-sizing:border-box}
+
+body{
+ margin:0;
+ background:radial-gradient(circle at 20% 0%,#182039 0,#080a0f 38%);
+ color:var(--text);
+ font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif;
+}
+
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+
+.app{
+ max-width:480px;
+ margin:auto;
+ min-height:100vh;
+ padding-bottom:88px;
+}
+
+header{
+ position:sticky;
+ top:0;
+ z-index:5;
+ padding:14px 16px;
+ background:rgba(8,10,15,.84);
+ backdrop-filter:blur(16px);
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ border-bottom:1px solid rgba(255,255,255,.05);
+}
+
+.logo{font-size:34px}
+.headTitle{font-weight:800;font-size:18px}
+.sub{color:var(--muted);font-size:12px}
+
+main{padding:16px}
+
+.view{display:none}
+.view.active{display:block}
+
+.card{
+ background:linear-gradient(145deg,rgba(23,28,38,.96),rgba(14,18,25,.96));
+ border:1px solid var(--border);
+ border-radius:var(--r);
+ padding:16px;
+ margin-bottom:14px;
+ box-shadow:var(--shadow);
+}
+
+.hero{padding:20px}
+
+.eyebrow{
+ color:var(--muted);
+ font-size:12px;
+ text-transform:uppercase;
+ letter-spacing:.08em;
+}
+
+.hero h1{
+ margin:5px 0 2px;
+ font-size:28px;
+}
+
+.hero p{
+ margin:0;
+ color:var(--muted);
+}
+
+.grid{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px;
+}
+
+.stat{
+ background:var(--panel2);
+ padding:13px;
+ border-radius:17px;
+}
+
+.stat b{
+ display:block;
+ font-size:22px;
+}
+
+.stat span{
+ color:var(--muted);
+ font-size:12px;
+}
+
+h2,h3{margin:5px 0 12px}
+
+.muted{color:var(--muted)}
+.small{font-size:12px}
+
+.row{
+ display:flex;
+ gap:9px;
+ align-items:center;
+}
+
+.between{
+ display:flex;
+ justify-content:space-between;
+ gap:10px;
+ align-items:center;
+}
+
+.btn{
+ border:0;
+ border-radius:15px;
+ padding:12px 15px;
+ background:var(--accent);
+ color:#07101c;
+ font-weight:800;
+}
+
+.btn.secondary{
+ background:var(--panel2);
+ color:var(--text);
+ border:1px solid var(--border);
+}
+
+.btn.danger{
+ background:#4b2024;
+ color:#ffdfe1;
+}
+
+.btn.full{width:100%}
+
+input,select,textarea{
+ width:100%;
+ background:#0c1017;
+ color:var(--text);
+ border:1px solid var(--border);
+ border-radius:14px;
+ padding:11px 12px;
+ outline:none;
+}
+
+textarea{
+ min-height:70px;
+ resize:vertical;
+}
+
+.field{margin:10px 0}
+
+.field label{
+ display:block;
+ font-size:12px;
+ color:var(--muted);
+ margin-bottom:5px;
+}
+
+.quick{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:9px;
+}
+
+.quick button{
+ background:var(--panel2);
+ border:1px solid var(--border);
+ color:var(--text);
+ padding:12px;
+ border-radius:15px;
+ text-align:left;
+}
+
+.pred{
+ display:grid;
+ grid-template-columns:92px 1fr;
+ gap:15px;
+ align-items:center;
+}
+
+.ring{
+ width:92px;
+ height:92px;
+ border-radius:50%;
+ display:grid;
+ place-items:center;
+ background:conic-gradient(
+  var(--c) calc(var(--p)*1%),
+  #28303d 0
+ );
+ position:relative;
+}
+
+.ring:after{
+ content:"";
+ width:70px;
+ height:70px;
+ background:var(--panel);
+ border-radius:50%;
+ position:absolute;
+}
+
+.ring span{
+ position:relative;
+ z-index:1;
+ font-weight:900;
+ font-size:19px;
+}
+
+.pred h3{margin:0}
+
+.answer{font-weight:900}
+.yes{color:var(--good)}
+.no{color:var(--bad)}
+.unknown{color:var(--warn)}
+
+.stars{
+ letter-spacing:2px;
+ font-size:15px;
+}
+
+.confidence{
+ font-size:12px;
+ color:var(--muted);
+}
+
+.progress{
+ height:10px;
+ background:#29303b;
+ border-radius:99px;
+ overflow:hidden;
+}
+
+.progress i{
+ display:block;
+ height:100%;
+ width:var(--p);
+ background:var(--c);
+ border-radius:99px;
+}
+
+.nav{
+ position:fixed;
+ z-index:8;
+ bottom:0;
+ left:50%;
+ transform:translateX(-50%);
+ width:min(480px,100%);
+ display:grid;
+ grid-template-columns:repeat(5,1fr);
+ padding:8px max(8px,env(safe-area-inset-left))
+ calc(8px + env(safe-area-inset-bottom));
+ background:rgba(8,10,15,.92);
+ backdrop-filter:blur(18px);
+ border-top:1px solid var(--border);
+}
+
+.nav button{
+ background:none;
+ border:0;
+ color:var(--muted);
+ font-size:11px;
+ padding:7px 2px;
+}
+
+.nav button.active{color:var(--text)}
+.nav b{display:block;font-size:19px}
+
+.badge{
+ display:inline-flex;
+ padding:4px 8px;
+ border-radius:99px;
+ background:#222a36;
+ color:var(--muted);
+ font-size:11px;
+}
+
+.empty{
+ text-align:center;
+ padding:24px;
+ color:var(--muted);
+}
+
+.event{
+ border-top:1px solid var(--border);
+ padding:12px 0;
+}
+
+.event:first-child{border-top:0}
+
+.actions{
+ display:flex;
+ gap:8px;
+ flex-wrap:wrap;
+}
+
+.actions .btn{
+ flex:1;
+ min-width:120px;
+}
+
+.modal{
+ position:fixed;
+ inset:0;
+ background:rgba(0,0,0,.7);
+ z-index:20;
+ display:none;
+ align-items:end;
+}
+
+.modal.show{display:flex}
+
+.sheet{
+ width:min(480px,100%);
+ margin:auto 0 0;
+ background:#10141c;
+ border-radius:24px 24px 0 0;
+ padding:18px;
+ max-height:92vh;
+ overflow:auto;
+}
+
+.toast{
+ position:fixed;
+ z-index:30;
+ bottom:92px;
+ left:50%;
+ transform:translateX(-50%);
+ background:#f4f7fb;
+ color:#080a0f;
+ padding:10px 14px;
+ border-radius:12px;
+ display:none;
+ font-weight:700;
+}
+
+hr{
+ border:0;
+ border-top:1px solid var(--border);
+ margin:15px 0;
+}
+
+@media(min-width:481px){
+ .nav{
+  bottom:12px;
+  border:1px solid var(--border);
+  border-radius:20px;
+ }
+
+ .app{padding-bottom:110px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+ <div class="row">
+  <div class="logo">🐢</div>
+
+  <div>
+   <div class="headTitle">Consejero predictivo</div>
+   <div class="sub" id="dateLabel"></div>
+  </div>
+ </div>
+
+ <button class="btn secondary" id="addTop">＋</button>
+</header>
+
+<main>
+
+<section id="home" class="view active">
+
+ <div class="card hero">
+  <div class="eyebrow">Resumen predictivo</div>
+  <h1 id="globalTitle">Analizando...</h1>
+  <p id="globalText">
+   La predicción se actualiza con tus datos.
+  </p>
+ </div>
+
+ <div class="card">
+
+  <div class="between">
+   <h2>🔮 Pronóstico</h2>
+   <span class="badge" id="forecastDate"></span>
+  </div>
+
+  <div id="globalForecast"></div>
+
+ </div>
+
+ <div class="card">
+
+  <h2>🎯 Qué hacer</h2>
+
+  <div id="advice"></div>
+
+ </div>
+
+ <div class="card">
+
+  <div class="between">
+   <h2>Predicciones</h2>
+
+   <span class="small muted" id="evidenceText"></span>
+  </div>
+
+  <div id="predictions"></div>
+
+ </div>
+
+ <div class="card">
+
+  <h2>⚡ Registrar rápido</h2>
+
+  <div class="quick">
+
+   <button onclick="openForm('Situación')">
+    📝 Situación
+   </button>
+
+   <button onclick="openForm('Compromiso / tarea')">
+    ✅ Tarea
+   </button>
+
+   <button onclick="openForm('Dinero / pago')">
+    💰 Dinero
+   </button>
+
+   <button onclick="openForm('Oportunidad')">
+    🎯 Oportunidad
+   </button>
+
+  </div>
+
+ </div>
+
+</section>
+
+
+<section id="register" class="view">
+
+ <div class="card">
+
+  <h2>➕ Registrar acontecimiento</h2>
+
+  <p class="muted small">
+   Completa solo lo necesario.
+   Puedes ampliar los detalles si quieres.
+  </p>
+
+  <form id="eventForm">
+
+   <div class="field">
+
+    <label>
+     ¿Qué pasó o qué esperas que pase?
+    </label>
+
+    <input
+     id="fTitle"
+     required
+     maxlength="120"
+     placeholder="Ej.: Recibiré un pago de un cliente">
+
+   </div>
+
+   <div class="grid">
+
+    <div class="field">
+
+     <label>Tipo</label>
+
+     <select id="fType">
+
+      <option>Situación</option>
+      <option>Compromiso / tarea</option>
+      <option>Oportunidad</option>
+      <option>Dinero / pago</option>
+      <option>Decisión</option>
+      <option>Información</option>
+      <option>Síntoma / estado personal</option>
+      <option>Otro</option>
+
+     </select>
+
+    </div>
+
+    <div class="field">
+
+     <label>Categoría</label>
+
+     <select id="fCat"></select>
+
+    </div>
+
+   </div>
+
+   <div class="grid">
+
+    <div class="field">
+
+     <label>Estado</label>
+
+     <select id="fStatus">
+
+      <option value="pending">
+       Pendiente
+      </option>
+
+      <option value="success">
+       Logrado / positivo
+      </option>
+
+      <option value="failed">
+       No logrado / negativo
+      </option>
+
+      <option value="cancelled">
+       Cancelado
+      </option>
+
+      <option value="postponed">
+       Postergado
+      </option>
+
+      <option value="unknown">
+       Desconocido
+      </option>
+
+     </select>
+
+    </div>
+
+    <div class="field">
+
+     <label>Importancia</label>
+
+     <select id="fImportance">
+
+      <option value="1">1 — baja</option>
+      <option value="2">2</option>
+      <option value="3" selected>3</option>
+      <option value="4">4</option>
+      <option value="5">5 — alta</option>
+
+     </select>
+
+    </div>
+
+   </div>
+
+   <div class="grid">
+
+    <div class="field">
+
+     <label>Fecha</label>
+     <input id="fDate" type="date">
+
+    </div>
+
+    <div class="field">
+
+     <label>Hora</label>
+     <input id="fTime" type="time">
+
+    </div>
+
+   </div>
+
+   <div class="field">
+
+    <label>
+     Persona / entidad relacionada
+    </label>
+
+    <input
+     id="fPeople"
+     maxlength="120"
+     placeholder="Opcional">
+
+   </div>
+
+   <div class="field">
+
+    <label>
+     Resultado esperado
+    </label>
+
+    <input
+     id="fExpected"
+     maxlength="180"
+     placeholder="¿Qué querías que ocurriera?">
+
+   </div>
+
+   <div class="field">
+
+    <label>
+     Contexto / detalles
+    </label>
+
+    <textarea
+     id="fContext"
+     maxlength="500"
+     placeholder="Lo esencial, sin perder tiempo..."></textarea>
+
+   </div>
+
+   <div class="field">
+
+    <label>
+     Acción que tomaste
+    </label>
+
+    <input
+     id="fAction"
+     maxlength="180"
+     placeholder="Opcional">
+
+   </div>
+
+   <div class="field">
+
+    <label>
+     Consecuencia conocida
+    </label>
+
+    <input
+     id="fConsequence"
+     maxlength="180"
+     placeholder="Solo si ya ocurrió">
+
+   </div>
+
+   <div class="actions">
+
+    <button class="btn full" type="submit">
+     Guardar
+    </button>
+
+    <button
+     class="btn secondary full"
+     type="button"
+     onclick="showView('home')">
+     Cancelar
+    </button>
+
+   </div>
+
+  </form>
+
+ </div>
+
+</section>
+
+
+<section id="history" class="view">
+
+ <div class="card">
+
+  <div class="between">
+
+   <h2>📚 Historial</h2>
+
+   <span class="badge" id="histCount"></span>
+
+  </div>
+
+  <div id="historyList"></div>
+
+ </div>
+
+</section>
+
+
+<section id="stats" class="view">
+
+ <div class="card">
+
+  <h2>📊 Estadísticas</h2>
+
+  <div class="grid" id="statsGrid"></div>
+
+ </div>
+
+ <div class="card">
+
+  <h2>🎯 Rendimiento de predicciones</h2>
+
+  <div id="calibration"></div>
+
+ </div>
+
+</section>
+
+
+<section id="settings" class="view">
+
+ <div class="card">
+
+  <h2>⚙️ Ajustes</h2>
+
+  <div class="field">
+
+   <label>Nombre</label>
+
+   <input id="profileName" placeholder="Tu nombre">
+
+  </div>
+
+  <button
+   class="btn full"
+   onclick="saveName()">
+   Guardar nombre
+  </button>
+
+  <hr>
+
+  <h3>🎨 Tema</h3>
+
+  <div class="grid">
+
+   <button
+    class="btn secondary"
+    onclick="setTheme('blue')">
+    Azul
+   </button>
+
+   <button
+    class="btn secondary"
+    onclick="setTheme('violet')">
+    Violeta
+   </button>
+
+   <button
+    class="btn secondary"
+    onclick="setTheme('green')">
+    Verde
+   </button>
+
+   <button
+    class="btn secondary"
+    onclick="setTheme('orange')">
+    Naranja
+   </button>
+
+  </div>
+
+  <hr>
+
+  <h3>💾 Datos</h3>
+
+  <p class="muted small">
+   Tus registros y aprendizaje se guardan localmente
+   en IndexedDB. Cerrar la app no los borra.
+  </p>
+
+  <div class="actions">
+
+   <button
+    class="btn secondary"
+    onclick="exportData()">
+    Exportar JSON
+   </button>
+
+   <label
+    class="btn secondary"
+    style="text-align:center">
+
+    Importar JSON
+
+    <input
+     type="file"
+     accept="application/json"
+     hidden
+     onchange="importData(event)">
+
+   </label>
+
+  </div>
+
+  <hr>
+
+  <button
+   class="btn danger full"
+   onclick="deleteAll()">
+   Borrar todos los datos
+  </button>
+
+ </div>
+
+</section>
+
+</main>
+
+
+<nav class="nav">
+
+ <button data-v="home" class="active">
+  <b>⌂</b>
+  Inicio
+ </button>
+
+ <button data-v="register">
+  <b>＋</b>
+  Registrar
+ </button>
+
+ <button data-v="history">
+  <b>▤</b>
+  Historial
+ </button>
+
+ <button data-v="stats">
+  <b>◔</b>
+  Estadísticas
+ </button>
+
+ <button data-v="settings">
+  <b>⚙</b>
+  Ajustes
+ </button>
+
+</nav>
+
+</div>
+
+
+<div class="modal" id="modal">
+
+ <div class="sheet">
+
+  <div class="between">
+
+   <h2>Registrar</h2>
+
+   <button
+    class="btn secondary"
+    onclick="closeModal()">
+    ✕
+   </button>
+
+  </div>
+
+  <p class="muted">
+   Usa el formulario completo para conservar
+   toda la información.
+  </p>
+
+  <button
+   class="btn full"
+   onclick="closeModal();showView('register')">
+   Abrir registro
+  </button>
+
+ </div>
+
+</div>
+
+
+<div class="toast" id="toast"></div>
+
+
+<script>
+
+const CATS = [
+ "Trabajo",
+ "Dinero",
+ "Negocio",
+ "Clientes",
+ "Alquileres / Propiedades",
+ "Familia",
+ "Pareja",
+ "Amistades / Relaciones",
+ "Oportunidad",
+ "Trámite / Documentación",
+ "Decisión",
+ "Problema",
+ "Conflicto / Discusión",
+ "Salud",
+ "Energía / Estado físico",
+ "Emoción / Ánimo",
+ "Clima / Entorno",
+ "Hogar / Reparación",
+ "Transporte / Movimiento",
+ "Compra / Gasto",
+ "Cobro / Pago",
+ "Tecnología",
+ "Seguridad / Incidente",
+ "Proyecto",
+ "Tiempo libre",
+ "Otro"
+];
+
+const KEY = "turtle_predictor_db_v3";
+
+let db = {
+ version:3,
+ profile:{
+  name:"Sebastián",
+  theme:"blue"
+ },
+ events:[],
+ predictions:[],
+ dailySnapshots:[],
+ calibration:[],
+ createdAt:Date.now(),
+ updatedAt:Date.now()
+};
+
+
+let id = () => {
+
+ if(crypto.randomUUID){
+  return crypto.randomUUID();
+ }
+
+ return Date.now().toString(36)
+  + Math.random().toString(36).slice(2);
+
+};
+
+
+const now = () => new Date();
+
+const isoDate = d =>
+ d.toISOString().slice(0,10);
+
+
+const catSel =
+ document.getElementById("fCat");
+
+
+CATS.forEach(c =>
+ catSel.add(new Option(c,c))
+);
+
+
+function openDB(){
+
+ return new Promise((resolve,reject)=>{
+
+  let request =
+   indexedDB.open(KEY,1);
+
+  request.onupgradeneeded = () => {
+
+   let database =
+    request.result;
+
+   if(!database.objectStoreNames.contains("state")){
+
+    database.createObjectStore(
+     "state",
+     {keyPath:"id"}
+    );
+
+   }
+
+  };
+
+
+  request.onsuccess = () =>
+   resolve(request.result);
+
+
+  request.onerror = () =>
+   reject(request.error);
+
+ });
+
+}
+
+
+async function load(){
+
+ try{
+
+  let database = await openDB();
+
+  let tx =
+   database.transaction(
+    "state",
+    "readonly"
+   );
+
+  let request =
+   tx.objectStore("state")
+    .get("main");
+
+
+  request.onsuccess = () => {
+
+   if(request.result?.data){
+
+    db = request.result.data;
+
+   }
+
+   init();
+
+  };
+
+
+  request.onerror = () =>
+   init();
+
+
+ }catch(error){
+
+  try{
+
+   let raw =
+    localStorage.getItem(KEY);
+
+   if(raw){
+    db = JSON.parse(raw);
+   }
+
+  }catch(e){}
+
+  init();
+
+ }
+
+}
+
+
+async function save(){
+
+ db.updatedAt = Date.now();
+
+ try{
+
+  let database = await openDB();
+
+  database
+   .transaction("state","readwrite")
+   .objectStore("state")
+   .put({
+    id:"main",
+    data:db
+   });
+
+ }catch(error){
+
+  localStorage.setItem(
+   KEY,
+   JSON.stringify(db)
+  );
+
+ }
+
+}
+
+
+function toast(message){
+
+ let element =
+  document.getElementById("toast");
+
+ element.textContent = message;
+
+ element.style.display = "block";
+
+ clearTimeout(window._toast);
+
+ window._toast =
+  setTimeout(()=>{
+   element.style.display="none";
+  },1800);
+
+}
+
+
+function showView(view){
+
+ document
+  .querySelectorAll(".view")
+  .forEach(element => {
+
+   element.classList.toggle(
+    "active",
+    element.id === view
+   );
+
+  });
+
+
+ document
+  .querySelectorAll(".nav button")
+  .forEach(element => {
+
+   element.classList.toggle(
+    "active",
+    element.dataset.v === view
+   );
+
+  });
+
+
+ render();
+
+}
+
+
+document
+ .querySelectorAll(".nav button")
+ .forEach(button => {
+
+  button.onclick = () =>
+   showView(button.dataset.v);
+
+ });
+
+
+document
+ .getElementById("addTop")
+ .onclick = () =>
+  openForm();
+
+
+function openForm(type){
+
+ document
+  .getElementById("eventForm")
+  .reset();
+
+
+ document.getElementById("fDate").value =
+  isoDate(now());
+
+
+ document.getElementById("fTime").value =
+  now().toTimeString().slice(0,5);
+
+
+ if(type){
+
+  document.getElementById("fType").value =
+   type;
+
+ }
+
+
+ showView("register");
+
+}
+
+
+function closeModal(){
+
+ document
+  .getElementById("modal")
+  .classList.remove("show");
+
+}
+
+
+document
+ .getElementById("eventForm")
+ .onsubmit = async e => {
+
+  e.preventDefault();
+
+
+  let status =
+   document.getElementById("fStatus").value;
+
+
+  let ev = {
+
+   id:id(),
+
+   createdAt:Date.now(),
+
+   updatedAt:Date.now(),
+
+   date:
+    document.getElementById("fDate").value,
+
+   time:
+    document.getElementById("fTime").value,
+
+   title:
+    document.getElementById("fTitle").value.trim(),
+
+   description:
+    document.getElementById("fContext").value.trim(),
+
+   type:
+    document.getElementById("fType").value,
+
+   category:
+    document.getElementById("fCat").value,
+
+   people:
+    document.getElementById("fPeople").value.trim(),
+
+   expected:
+    document.getElementById("fExpected").value.trim(),
+
+   importance:
+    +document.getElementById("fImportance").value,
+
+   intensity:
+    +document.getElementById("fImportance").value,
+
+   actionTaken:
+    document.getElementById("fAction").value.trim(),
+
+   consequence:
+    document.getElementById("fConsequence").value.trim(),
+
+   status:status,
+
+   outcome:
+    status==="success"
+     ? "positive"
+     : status==="failed"
+     ? "negative"
+     : status==="cancelled"
+     ? "cancelled"
+     : status==="postponed"
+     ? "postponed"
+     : null,
+
+   outcomeAt:
+    status==="pending"
+     ? null
+     : Date.now(),
+
+   source:"during_day"
+
+  };
+
+
+  db.events.push(ev);
+
+  await save();
+
+  toast("Guardado");
+
+  showView("home");
+
+ };
+
+
+function validClosed(event){
+
+ return [
+  "success",
+  "failed"
+ ].includes(event.status);
+
+}
+
+
+function comparable(category){
+
+ return db.events.filter(event =>
+  event.category === category &&
+  validClosed(event)
+ );
+
+}
+
+
+function weightedStats(arr){
+
+ if(!arr.length){
+  return null;
+ }
+
+ let nowTime = Date.now();
+
+ let success = 0;
+ let weight = 0;
+ let squaredWeight = 0;
+
+
+ arr.forEach(event => {
+
+  let age =
+   Math.max(
+    0,
+    (nowTime-event.outcomeAt)
+    /86400000
+   );
+
+
+  let w =
+   Math.pow(.97,age);
+
+
+  let y =
+   event.status === "success"
+    ? 1
+    : 0;
+
+
+  success += w*y;
+
+  weight += w;
+
+  squaredWeight += w*w;
+
+ });
+
+
+ /*
+   Beta-Binomial posterior.
+
+   Prior:
+   alpha = 2
+   beta  = 2
+
+   Se conserva un prior débil para
+   evitar probabilidades artificiales
+   de 0% o 100%.
+ */
+
+ let p =
+  (2+success)
+  /(4+weight);
+
+
+ let effectiveN =
+  weight*weight
+  /squaredWeight;
+
+
+ return {
+  p,
+  n:arr.length,
+  ne:effectiveN
+ };
+
+}
+
+
+function confidence(ne){
+
+ if(!ne){
+
+  return {
+   level:"Sin evidencia suficiente",
+   stars:0
+  };
+
+ }
+
+
+ if(ne<10){
+
+  return {
+   level:"Muy baja",
+   stars:1
+  };
+
+ }
+
+
+ if(ne<20){
+
+  return {
+   level:"Baja",
+   stars:2
+  };
+
+ }
+
+
+ if(ne<50){
+
+  return {
+   level:"Media",
+   stars:3
+  };
+
+ }
+
+
+ if(ne<100){
+
+  return {
+   level:"Alta",
+   stars:4
+  };
+
+ }
+
+
+ return {
+  level:"Muy alta",
+  stars:5
+ };
+
+}
+
+
+function pctColor(p){
+
+ if(p<40){
+  return "var(--bad)";
+ }
+
+ if(p<70){
+  return "var(--warn)";
+ }
+
+ return "var(--good)";
+
+}
+
+
+function predFor(category){
+
+ let arr =
+  comparable(category);
+
+
+ let stats =
+  weightedStats(arr);
+
+
+ if(!stats){
+
+  return {
+   cat:category,
+   known:false
+  };
+
+ }
+
+
+ let p =
+  stats.p*100;
+
+
+ let c =
+  confidence(stats.ne);
+
+
+ return {
+
+  cat:category,
+
+  known:true,
+
+  p,
+
+  n:stats.n,
+
+  ne:stats.ne,
+
+  c,
+
+  yes:p>=50
+
+ };
+
+}
+
+
+function icon(category){
+
+ const icons = {
+
+  "Trabajo":"💼",
+  "Dinero":"💰",
+  "Negocio":"📈",
+  "Clientes":"👥",
+  "Familia":"🏠",
+  "Pareja":"❤️",
+  "Amistades / Relaciones":"🤝",
+  "Oportunidad":"🎯",
+  "Problema":"⚠️",
+  "Conflicto / Discusión":"💬",
+  "Salud":"🩺",
+  "Hogar / Reparación":"🔧",
+  "Compra / Gasto":"🛒",
+  "Cobro / Pago":"💵",
+  "Proyecto":"🚀"
+
+ };
+
+
+ return icons[category] || "•";
+
+}
+
+
+function renderPrediction(x){
+
+ if(!x.known){
+
+  return `
+
+   <div class="event">
+
+    <div class="between">
+
+     <b>
+      ${icon(x.cat)} ${x.cat}
+     </b>
+
+     <span class="badge">
+      Sin evidencia
+     </span>
+
+    </div>
+
+    <div class="small muted">
+
+     Todavía no hay casos cerrados
+     comparables suficientes.
+
+    </div>
+
+   </div>
+
+  `;
+
+ }
+
+
+ let p =
+  Math.round(x.p);
+
+
+ let color =
+  pctColor(p);
+
+
+ let stars =
+  "★".repeat(x.c.stars)
+  +
+  "☆".repeat(5-x.c.stars);
+
+
+ return `
+
+  <div class="event">
+
+   <div class="pred">
+
+    <div
+     class="ring"
+     style="
+      --p:${p};
+      --c:${color}
+     ">
+
+     <span>
+      ${p}%
+     </span>
+
+    </div>
+
+
+    <div>
+
+     <h3>
+      ${icon(x.cat)} ${x.cat}
+     </h3>
+
+     <div
+      class="answer
+      ${x.yes ? "yes":"no"}">
+
+      ${x.yes ? "SÍ":"NO"}
+
+     </div>
+
+
+     <div class="stars">
+      ${stars}
+     </div>
+
+
+     <div class="confidence">
+      Confianza: ${x.c.level}
+     </div>
+
+
+     <div class="small muted">
+
+      ${x.n} casos ·
+      evidencia efectiva
+      ${x.ne.toFixed(1)}
+
+     </div>
+
+    </div>
+
+   </div>
+
+  </div>
+
+ `;
+
+}
+
+
+function buildPreds(){
+
+ return CATS.map(category =>
+  predFor(category)
+ );
+
+}
+
+
+function globalForecast(predictions){
+
+ let known =
+  predictions.filter(x=>x.known);
+
+
+ if(!known.length){
+
+  return null;
+
+ }
+
+
+ let numerator =
+  known.reduce(
+   (sum,x)=>
+    sum + x.p*x.ne,
+   0
+  );
+
+
+ let denominator =
+  known.reduce(
+   (sum,x)=>
+    sum+x.ne,
+   0
+  );
+
+
+ let weighted =
+  numerator/denominator;
+
+
+ let pending =
+  db.events.filter(
+   e=>e.status==="pending"
+  ).length;
+
+
+ return {
+
+  p:weighted,
+  pending,
+  n:known.length
+
+ };
+
+}
+
+
+function advice(predictions){
+
+ let known =
+  predictions
+   .filter(x=>x.known)
+   .sort((a,b)=>a.p-b.p);
+
+
+ let pending =
+  db.events
+   .filter(e=>e.status==="pending")
+   .sort(
+    (a,b)=>
+     b.importance-a.importance
+   );
+
+
+ if(!known.length){
+
+  return `
+
+   Todavía estás construyendo evidencia.
+
+   <br><br>
+
+   Registra acontecimientos durante el día
+   y ciérralos cuando conozcas el resultado.
+
+   <br><br>
+
+   Los acontecimientos pendientes
+   <b>no cuentan como aciertos ni fallos</b>.
+
+  `;
+
+ }
+
+
+ let risk =
+  known[0];
+
+
+ let opportunity =
+  known[known.length-1];
+
+
+ let result = `
+
+  Prioriza hoy
+  <b>${risk.cat}</b>:
+
+  su señal histórica es
+  <b>${Math.round(risk.p)}%</b>.
+
+  Conviene actuar de forma preventiva.
+
+ `;
+
+
+ if(
+  opportunity &&
+  opportunity.cat !== risk.cat
+ ){
+
+  result += `
+
+   <br><br>
+
+   También presta atención a
+   <b>${opportunity.cat}</b>,
+
+   que presenta la señal histórica
+   más favorable:
+   <b>${Math.round(opportunity.p)}%</b>.
+
+  `;
+
+ }
+
+
+ if(pending.length){
+
+  result += `
+
+   <br><br>
+
+   Tienes
+   <b>${pending.length}</b>
+   acontecimiento(s) pendiente(s).
+
+   Actualízalos cuando se resuelvan.
+
+  `;
+
+ }
+
+
+ return result;
+
+}
+
+
+function render(){
+
+ let date =
+  now();
+
+
+ let predictions =
+  buildPreds();
+
+
+ let global =
+  globalForecast(predictions);
+
+
+ document.getElementById(
+  "dateLabel"
+ ).textContent =
+  date.toLocaleDateString(
+   "es-PY",
+   {
+    weekday:"long",
+    day:"numeric",
+    month:"long"
+   }
+  );
+
+
+ document.getElementById(
+  "forecastDate"
+ ).textContent =
+  date.toLocaleDateString(
+   "es-PY",
+   {
+    day:"2-digit",
+    month:"short"
+   }
+  );
+
+
+ document.getElementById(
+  "evidenceText"
+ ).textContent =
+  `${predictions.filter(x=>x.known).length}
+   categorías con evidencia`;
+
+
+ document.getElementById(
+  "predictions"
+ ).innerHTML =
+  predictions
+   .map(renderPrediction)
+   .join("");
+
+
+ document.getElementById(
+  "advice"
+ ).innerHTML =
+  advice(predictions);
+
+
+ if(!global){
+
+  document.getElementById(
+   "globalTitle"
+  ).textContent =
+   "Aún estamos aprendiendo";
+
+
+  document.getElementById(
+   "globalText"
+  ).textContent =
+   "Necesitamos resultados cerrados para construir un resumen estadístico personal.";
+
+
+  document.getElementById(
+   "globalForecast"
+  ).innerHTML = `
+
+   <div class="empty">
+
+    Sin evidencia suficiente
+    para un porcentaje global honesto.
+
+   </div>
+
+  `;
+
+ }else{
+
+  let p =
+   Math.round(global.p);
+
+
+  let color =
+   pctColor(p);
+
+
+  let allEffective =
+   predictions
+    .filter(x=>x.known)
+    .reduce(
+     (sum,x)=>sum+x.ne,
+     0
+    );
+
+
+  let globalConfidence =
+   confidence(allEffective);
+
+
+  document.getElementById(
+   "globalTitle"
+  ).textContent =
+   `${p}% — ${
+    p>=50
+     ?"escenario favorable"
+     :"escenario desfavorable"
+   }`;
+
+
+  document.getElementById(
+   "globalText"
+  ).textContent =
+   `Resumen de las señales históricas disponibles.
+    Confianza global: ${globalConfidence.level}.`;
+
+
+  document.getElementById(
+   "globalForecast"
+  ).innerHTML = `
+
+   <div class="pred">
+
+    <div
+     class="ring"
+     style="
+      --p:${p};
+      --c:${color}
+     ">
+
+     <span>
+      ${p}%
+     </span>
+
+    </div>
+
+
+    <div>
+
+     <div
+      class="answer
+      ${p>=50?"yes":"no"}">
+
+      ${p>=50?"SÍ":"NO"}
+
+     </div>
+
+
+     <div class="stars">
+
+      ${
+       "★".repeat(
+        Math.max(
+         1,
+         Math.min(
+          5,
+          Math.round(global.n/5)
+         )
+        )
+       )
+      }
+
+      ${
+       "☆".repeat(
+        Math.max(
+         0,
+         5-Math.max(
+          1,
+          Math.min(
+           5,
+           Math.round(global.n/5)
+          )
+         )
+        )
+       )
+      }
+
+     </div>
+
+
+     <div class="confidence">
+
+      Confianza:
+      ${globalConfidence.level}
+
+     </div>
+
+
+     <div class="small muted">
+
+      ${global.n}
+      señales históricas ·
+      ${global.pending}
+      pendientes
+
+     </div>
+
+    </div>
+
+   </div>
+
+  `;
+
+ }
+
+
+ renderHistory();
+ renderStats();
+
+
+ document.getElementById(
+  "profileName"
+ ).value =
+  db.profile.name || "";
+
+
+ applyTheme();
+
+}
+
+
+function renderHistory(){
+
+ document.getElementById(
+  "histCount"
+ ).textContent =
+  db.events.length+" registros";
+
+
+ if(!db.events.length){
+
+  document.getElementById(
+   "historyList"
+  ).innerHTML = `
+
+   <div class="empty">
+    Todavía no hay registros.
+   </div>
+
+  `;
+
+  return;
+
+ }
+
+
+ document.getElementById(
+  "historyList"
+ ).innerHTML =
+
+  [...db.events]
+
+   .sort(
+    (a,b)=>
+     (b.createdAt||0)
+     -(a.createdAt||0)
+   )
+
+   .slice(0,80)
+
+   .map(event=>`
+
+    <div class="event">
+
+     <div class="between">
+
+      <b>
+       ${icon(event.category)}
+       ${event.title}
+      </b>
+
+      <span class="badge">
+       ${event.status}
+      </span>
+
+     </div>
+
+
+     <div class="small muted">
+
+      ${event.date||""}
+      ${event.time||""}
+      ·
+      ${event.category}
+
+     </div>
+
+
+     ${
+      event.description
+       ?`<div>${event.description}</div>`
+       :""
+     }
+
+
+     ${
+      event.status==="pending"
+       ?`
+
+        <div
+         class="actions"
+         style="margin-top:8px">
+
+         <button
+          class="btn secondary"
+          onclick="closeEvent(
+           '${event.id}',
+           'success'
+          )">
+
+          Logrado
+
+         </button>
+
+
+         <button
+          class="btn secondary"
+          onclick="closeEvent(
+           '${event.id}',
+           'failed'
+          )">
+
+          No logrado
+
+         </button>
+
+        </div>
+
+       `
+       :""
+     }
+
+    </div>
+
+   `)
+
+   .join("");
+
+}
+
+
+async function closeEvent(
+ eventId,
+ status
+){
+
+ let event =
+  db.events.find(
+   x=>x.id===eventId
+  );
+
+
+ if(!event){
+  return;
+ }
+
+
+ event.status =
+  status;
+
+
+ event.outcome =
+  status==="success"
+   ?"positive"
+   :"negative";
+
+
+ event.outcomeAt =
+  Date.now();
+
+
+ event.updatedAt =
+  Date.now();
+
+
+ await save();
+
+
+ toast("Resultado cerrado");
+
+
+ render();
+
+}
+
+
+function renderStats(){
+
+ let closed =
+  db.events.filter(
+   validClosed
+  );
+
+
+ let positive =
+  closed.filter(
+   e=>e.status==="success"
+  ).length;
+
+
+ document.getElementById(
+  "statsGrid"
+ ).innerHTML = `
+
+  <div class="stat">
+
+   <b>
+    ${db.events.length}
+   </b>
+
+   <span>
+    Registros
+   </span>
+
+  </div>
+
+
+  <div class="stat">
+
+   <b>
+    ${
+     db.events.filter(
+      e=>e.status==="pending"
+     ).length
+    }
+   </b>
+
+   <span>
+    Pendientes
+   </span>
+
+  </div>
+
+
+  <div class="stat">
+
+   <b>
+    ${closed.length}
+   </b>
+
+   <span>
+    Cerrados
+   </span>
+
+  </div>
+
+
+  <div class="stat">
+
+   <b>
+    ${
+     closed.length
+      ?Math.round(
+       positive/closed.length*100
+      )+"%"
+      :"—"
+    }
+   </b>
+
+   <span>
+    Resultados positivos
+   </span>
+
+  </div>
+
+ `;
+
+
+ document.getElementById(
+  "calibration"
+ ).innerHTML = `
+
+  <div class="muted small">
+
+   El registro de rendimiento de predicciones
+   se conserva en la base de datos.
+
+   <br><br>
+
+   Las predicciones no se retroalimentan como
+   resultados hasta que el acontecimiento
+   correspondiente se cierra.
+
+  </div>
+
+ `;
+
+}
+
+
+function saveName(){
+
+ db.profile.name =
+  document
+   .getElementById("profileName")
+   .value
+   .trim()
+   ||
+   "Sebastián";
+
+
+ save();
+
+ toast("Nombre guardado");
+
+}
+
+
+function setTheme(theme){
+
+ db.profile.theme =
+  theme;
+
+
+ save();
+
+ applyTheme();
+
+ toast("Tema cambiado");
+
+}
+
+
+function applyTheme(){
+
+ let root =
+  document.documentElement;
+
+
+ let theme =
+  db.profile.theme;
+
+
+ if(theme==="violet"){
+
+  root.style.setProperty(
+   "--accent",
+   "#a78bfa"
+  );
+
+  root.style.setProperty(
+   "--accent2",
+   "#c084fc"
+  );
+
+ }
+
+ else if(theme==="green"){
+
+  root.style.setProperty(
+   "--accent",
+   "#34d399"
+  );
+
+  root.style.setProperty(
+   "--accent2",
+   "#6ee7b7"
+  );
+
+ }
+
+ else if(theme==="orange"){
+
+  root.style.setProperty(
+   "--accent",
+   "#fb923c"
+  );
+
+  root.style.setProperty(
+   "--accent2",
+   "#fdba74"
+  );
+
+ }
+
+ else{
+
+  root.style.setProperty(
+   "--accent",
+   "#7c9cff"
+  );
+
+  root.style.setProperty(
+   "--accent2",
+   "#9c7cff"
+  );
+
+ }
+
+}
+
+
+function exportData(){
+
+ let blob =
+  new Blob(
+   [
+    JSON.stringify(
+     db,
+     null,
+     2
+    )
+   ],
+   {
+    type:"application/json"
+   }
+  );
+
+
+ let a =
+  document.createElement("a");
+
+
+ a.href =
+  URL.createObjectURL(blob);
+
+
+ a.download =
+  "turtle-backup.json";
+
+
+ a.click();
+
+
+ setTimeout(
+  ()=>{
+   URL.revokeObjectURL(a.href);
+  },
+  1000
+ );
+
+}
+
+
+function importData(event){
+
+ let file =
+  event.target.files[0];
+
+
+ if(!file){
+  return;
+ }
+
+
+ let reader =
+  new FileReader();
+
+
+ reader.onload = async()=>{
+
+  try{
+
+   let imported =
+    JSON.parse(
+     reader.result
+    );
+
+
+   if(
+    !imported.events ||
+    !imported.profile
+   ){
+
+    throw new Error();
+
+   }
+
+
+   db =
+    imported;
+
+
+   await save();
+
+
+   render();
+
+
+   toast(
+    "Datos importados"
+   );
+
+  }catch(error){
+
+   toast(
+    "Archivo no válido"
+   );
+
+  }
+
+ };
+
+
+ reader.readAsText(file);
+
+}
+
+
+async function deleteAll(){
+
+ let confirmed =
+  confirm(
+   "Esto eliminará tus registros, " +
+   "predicciones y aprendizaje local. " +
+   "El código de la app no se borra. " +
+   "¿Continuar?"
+  );
+
+
+ if(!confirmed){
+  return;
+ }
+
+
+ db = {
+
+  version:3,
+
+  profile:{
+   name:"Sebastián",
+   theme:"blue"
+  },
+
+  events:[],
+
+  predictions:[],
+
+  dailySnapshots:[],
+
+  calibration:[],
+
+  createdAt:Date.now(),
+
+  updatedAt:Date.now()
+
+ };
+
+
+ await save();
+
+
+ render();
+
+
+ toast(
+  "Datos eliminados"
+ );
+
+}
+
+
+function init(){
+
+ applyTheme();
+
+
+ document.getElementById(
+  "fDate"
+ ).value =
+  isoDate(now());
+
+
+ document.getElementById(
+  "fTime"
+ ).value =
+  now()
+   .toTimeString()
+   .slice(0,5);
+
+
+ render();
+
+}
+
+
+load();
+
+</script>
+
+</body>
+</html>
